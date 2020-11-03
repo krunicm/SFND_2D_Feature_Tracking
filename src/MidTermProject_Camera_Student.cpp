@@ -67,13 +67,13 @@ int main(int argc, const char *argv[])
             dataBuffer.erase(dataBuffer.begin());
 
         //// EOF STUDENT ASSIGNMENT
-        cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
+        cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl; 
 
         /* DETECT IMAGE KEYPOINTS */
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "HARRIS"; //// -> SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
+        string detectorType = "FAST"; //// -> SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -83,9 +83,17 @@ int main(int argc, const char *argv[])
         {
             detKeypointsShiTomasi(keypoints, imgGray, false);
         }
-        else if (detectorType.compare("HARRIS") == 0)
+        else 
         {
-            detKeypointsHarris(keypoints, imgGray, false);
+            if (detectorType.compare("HARRIS") == 0)
+            {
+                detKeypointsHarris(keypoints, imgGray, false);
+            }
+            else
+            {
+                detKeypointsModern(keypoints, imgGray, detectorType, false);
+            }
+            
         }
         //// EOF STUDENT ASSIGNMENT
 

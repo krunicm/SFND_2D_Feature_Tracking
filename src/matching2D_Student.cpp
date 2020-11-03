@@ -1,7 +1,9 @@
 #include <numeric>
+#include <map>
 #include "matching2D.hpp"
 
 using namespace std;
+
 
 // Find best matches for keypoints in two camera images based on several matching methods
 void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
@@ -178,7 +180,65 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     }
 }
 
+constexpr unsigned int str2int(const char* str, int h)
+{
+    return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
+}
+
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
+    string windowName = "";
+    int threshold = 30;                                                              // difference between intensity of the central pixel and pixels of a circle around this pixel
+    bool bNMS = true;     
+    double t;
+    cv::FastFeatureDetector::DetectorType type;
+    cv::Ptr<cv::FeatureDetector> detector;
+  
+    // -> FAST, BRISK, ORB, AKAZE, SIFT
+    switch (str2int(detectorType.c_str()))
+    {
+    case str2int("FAST"):
+        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        detector = cv::FastFeatureDetector::create(threshold, bNMS, type);
+        break;
 
+    case str2int("BRISK"):
+        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        detector = cv::BRISK::create(threshold, bNMS, type);
+        break;
+
+    case str2int("ORB"):
+        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        detector = cv::ORB::create(threshold, bNMS, type);
+        break;
+
+    case str2int("AKAZE"):
+        // cv::AKAZE::DescriptorType descType = cv::AKAZE::DESCRIPTOR_KAZE; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        detector = cv::AKAZE::create(cv::AKAZE::DESCRIPTOR_KAZE, 10, img.channels(), (float) threshold);
+        break;
+
+    case str2int("SIFT"):
+        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
+        detector = cv::SIFT::create(threshold, bNMS, type);
+        break;
+    }
+
+    t = (double)cv::getTickCount();
+    detector->detect(img, keypoints);
+
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << detectorType << " with n= " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+
+    if (bVis)
+    {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        windowName = detectorType + " Results";
+        cv::namedWindow(windowName, 2);
+        imshow(windowName, visImage);
+        cv::waitKey(0);
+    }
+
+    
 }
