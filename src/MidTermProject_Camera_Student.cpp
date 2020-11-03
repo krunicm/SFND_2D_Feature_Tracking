@@ -72,7 +72,7 @@ int main(int argc, const char *argv[])
         /* DETECT IMAGE KEYPOINTS */
 
         // extract 2D keypoints from current image
-        vector<cv::KeyPoint> keypoints; // create empty feature list for current image
+        vector<cv::KeyPoint> keypoints, roiKeypoints; // create empty feature list for current image
         string detectorType = "FAST"; //// -> SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
@@ -105,7 +105,12 @@ int main(int argc, const char *argv[])
         cv::Rect vehicleRect(535, 180, 180, 150);
         if (bFocusOnVehicle)
         {
-            // ...
+            for (vector<cv::KeyPoint>::iterator it = keypoints.begin(); it != keypoints.end(); ++it)
+            {
+                if (vehicleRect.contains(it->pt))
+                    roiKeypoints.push_back(*it);
+            }
+            keypoints = roiKeypoints;
         }
 
         //// EOF STUDENT ASSIGNMENT
