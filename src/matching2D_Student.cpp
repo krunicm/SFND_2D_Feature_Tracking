@@ -23,12 +23,12 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
-        if (descSource.type() != CV_32F)
+        if (descSource.type() != CV_32F || descRef.type() != CV_32F)
         { // OpenCV bug workaround : convert binary descriptors to floating point due to a bug in current OpenCV implementation
             descSource.convertTo(descSource, CV_32F);
             descRef.convertTo(descRef, CV_32F);
         }
-
+       
         matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
     }
 
@@ -36,7 +36,10 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     if (selectorType.compare("SEL_NN") == 0)
     { // nearest neighbor (best match)
 
+        double t = (double)cv::getTickCount();
         matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        std::cout << "NN with n=" << matches.size() << " matches in " << 1000*t/1.0 << " ms" << std::endl;
     }
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
@@ -243,23 +246,19 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         break;
 
     case str2int("BRISK"):
-        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
-        detector = cv::BRISK::create(threshold, bNMS, type);
+        detector = cv::BRISK::create();
         break;
 
     case str2int("ORB"):
-        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
-        detector = cv::ORB::create(threshold, bNMS, type);
+        detector = cv::ORB::create();
         break;
 
     case str2int("AKAZE"):
-        // cv::AKAZE::DescriptorType descType = cv::AKAZE::DESCRIPTOR_KAZE; // TYPE_9_16, TYPE_7_12, TYPE_5_8
-        detector = cv::AKAZE::create(cv::AKAZE::DESCRIPTOR_KAZE, 10, img.channels(), (float) threshold);
+        detector = cv::AKAZE::create();
         break;
 
     case str2int("SIFT"):
-        type = cv::FastFeatureDetector::TYPE_9_16; // TYPE_9_16, TYPE_7_12, TYPE_5_8
-        detector = cv::SIFT::create(threshold, bNMS, type);
+        detector = cv::SIFT::create();
         break;
     }
 
