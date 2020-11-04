@@ -62,11 +62,11 @@ int main(int argc, const char *argv[])
         // push image into data frame buffer
         DataFrame frame;
         frame.cameraImg = imgGray;
-        dataBuffer.push_back(frame);
-        if (dataBuffer.size() > 2)
+        if (dataBuffer.size() > 1)
             dataBuffer.erase(dataBuffer.begin());
-
+        dataBuffer.push_back(frame);
         //// EOF STUDENT ASSIGNMENT
+        
         cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl; 
 
         /* DETECT IMAGE KEYPOINTS */
