@@ -347,15 +347,67 @@ Added following implementation:
 
 Answear:
 
+| Detector      | Number of keypoints |
+| -----------   | ----------- |
+| SHITOMASI | 1179 |
+| HARRIS | 248 |
+| FAST | 1491 |
+| BRISK | 2762 |
+| ORB| 1161 |
+| AKAZE | 1670 |
+| SIFT | 1386 |
+
 
   MP.8 Performance Evaluation 2:
   Count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, the BF approach is used with the descriptor distance ratio set to 0.8.
-
-Answear:
-
 
   MP.9 Performance Evaluation 3:
   Log the time it takes for keypoint detection and descriptor extraction. The results must be entered into a spreadsheet and based on this data, the TOP3 detector / descriptor combinations must be recommended as the best choice for our purpose of detecting keypoints on vehicles.
 
 Answear:
+ | Detector/Descriptor | Number of Matches | Time (s) | Matches/t
+ | -----------   | ----------- | ----------- | ----------- |
+ | SHITOMASI/BRIEF | 1067 |  144.151 | 0.00740196 | 
+ | SHITOMASI/ORB | 1179 |  170.71 | 0.00690645 | 
+ | SHITOMASI/FREAK | Assertion failed | N/A |
+ | SHITOMASI/AKAZE | Assertion failed | N/A |
+ | SHITOMASI/SIFT | Assertion failed | N/A |
+ | HARRIS/BRIEF | 326 |  154.275 | 0.00211311 | 
+ | HARRIS/ORB | 248 |  171.021 | 0.00145012 | 
+ | HARRIS/FREAK | Assertion failed | N/A |
+ | HARRIS/AKAZE | Assertion failed | N/A |
+ | HARRIS/SIFT | Assertion failed | N/A |
+ | FAST/BRIEF | 1382 |  55.7452 | 0.0247914 | 
+ | FAST/ORB | 1491 |  75.7176 | 0.0196916 | 
+ | FAST/FREAK | Assertion failed | N/A |
+ | FAST/AKAZE | Assertion failed | N/A |
+ | FAST/SIFT | Assertion failed | N/A |
+ | BRISK/BRIEF | 2651 |  2063.33 | 0.00128482 | 
+ | BRISK/ORB | 2762 |  2088.8 | 0.00132229 | 
+ | BRISK/FREAK | Assertion failed | N/A |
+ | BRISK/AKAZE | Assertion failed | N/A |
+ | BRISK/SIFT | Assertion failed | N/A |
+ | ORB/BRIEF | 1287 |  303.755 | 0.00423696 | 
+ | ORB/ORB | 1161 |  176.591 | 0.00657452 | 
+ | ORB/FREAK | Assertion failed | N/A |
+ | ORB/AKAZE | Assertion failed | N/A |
+ | ORB/SIFT | Assertion failed | N/A |
+ | AKAZE/BRIEF | 1619 |  406.88 | 0.00397906 | 
+ | AKAZE/ORB | 1670 |  460.492 | 0.00362655 | 
+ | AKAZE/FREAK | Assertion failed | N/A |
+ | AKAZE/AKAZE | Assertion failed | N/A |
+ | AKAZE/SIFT | Assertion failed | N/A |
+ | SIFT/BRIEF | Out of memory | N/A |
+ | SIFT/ORB | Out of memory | N/A |
+ | SIFT/FREAK | Out of memory | N/A |
+ | SIFT/AKAZE | Out of memory | N/A |
+ | SIFT/SIFT | Out of memory | N/A |
 
+
+ Top 3 Detector/Descriptor:
+
+| Detector/Descriptor | Matches per second |
+ | -----------   | ----------- | 
+ | FAST/BRIEF | 24.1686 | 
+ | FAST/ORB | 19.9916 | 
+ | SHITOMASI/BRIEF | 7.11662 | 
